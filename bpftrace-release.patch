@@ -27,7 +27,7 @@ index 68890703..bee4101b 100644
 +++ b/docker/Dockerfile.focal
 @@ -1,4 +1,4 @@
 -FROM ubuntu:focal
-+FROM bpftrace-llvm-arm64:focal-glibc231
++FROM liuxinquan/bpftrace-llvm-arm64:focal-glibc231
  
  ARG LLVM_VERSION
  ENV LLVM_VERSION=$LLVM_VERSION
