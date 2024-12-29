@@ -31,7 +31,7 @@ index ee346908..3fb15038 100644
  ARG BASE="bionic"
  ARG LLVM_VERSION="12"
 -FROM quay.io/iovisor/bpftrace-llvm:${BASE}_${LLVM_VERSION}
-+FROM bpftrace-llvm-arm64:focal-glibc231
++FROM liuxinquan/bpftrace-llvm-arm64:focal-glibc231
  
  ARG BASE
  ARG LLVM_VERSION
