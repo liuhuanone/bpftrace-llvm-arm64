@@ -1,0 +1,29 @@
+FROM liuxinquan/bpftrace-llvm14-arm64:focal-glibc231
+
+ARG BUILD_PATH
+ARG TYPE
+RUN echo $BUILD_PATH
+RUN echo $TYPE
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends asciidoctor binutils-dev libcereal-dev libiberty-dev systemtap-sdt-dev
+
+
+RUN git clone https://github.com/libbpf/libbpf.git && \
+    cd libbpf && \
+    make -C src -j $(nproc)  install install_uapi_headers
+
+RUN git clone https://github.com/the-tcpdump-group/libpcap.git -b libpcap-1.6 && \
+    cd libpcap && \
+    ./configure --disable-dbus && make -j $(nproc) install
+    
+# build bcc
+RUN git clone --recurse-submodules https://github.com/iovisor/bcc.git
+RUN cd bcc && mkdir build && \
+    cmake -B build -DENABLE_MAN=0 -DENABLE_EXAMPLES=0 -DENABLE_TESTS=0 -DENABLE_LIBDEBUGINFOD=0 -DENABLE_LLVM_NATIVECODEGEN=0 && \
+    make -C build -j$(nproc) install
+
+#build bpftrace
+RUN git clone https://github.com/bpftrace/bpftrace.git -b release/0.21.x
+RUN cd bpftrace && mkdir -p "$BUILD_PATH" && \
+    cmake -B "$BUILD_PATH" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE="$2" -DBUILD_ASAN:BOOL=OFF -DWARNINGS_AS_ERRORS:BOOL=OFF && \
+    -DALLOW_UNSAFE_PROBE:BOOL=ON -DVENDOR_GTEST=0 -DSTATIC_LINKING=ON && make -C "$BUILD_PATH" -j$(nproc) install

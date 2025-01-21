@@ -1,0 +1,46 @@
+FROM ubuntu:20.04
+
+ENV LLVM_VERSION=14
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates build-essential cmake ninja-build python3 curl \
+zip bison flex git libedit-dev zlib1g-dev libelf-dev libfl-dev python3-setuptools liblzma-dev arping netperf iperf pkg-config
+
+RUN curl -L --output /tmp/llvm.tar.xz  \
+  https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}.0.0/llvm-project-${LLVM_VERSION}.0.0.src.tar.xz \
+  && tar -xf /tmp/llvm.tar.xz -C /root/  && cd  /root/llvm-project-${LLVM_VERSION}.0.0.src
+
+RUN  cd  /root/llvm-project-${LLVM_VERSION}.0.0.src && mkdir build && cd build \
+    &&  cmake  -G "Ninja" -DLLVM_ENABLE_PROJECTS="llvm;clang;clang-tools-extra;" \
+    -DLLVM_TARGETS_TO_BUILD=BPF \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLLVM_BUILD_DOCS=OFF \
+    -DLLVM_BUILD_EXAMPLES=OFF \
+    -DLLVM_BUILD_EXTERNAL_COMPILER_RT=ON \
+    -DLLVM_BUILD_LLVM_DYLIB=ON \
+    -DLLVM_BUILD_TESTS=OFF \
+    -DLLVM_DEFAULT_TARGET_TRIPLE=${CBUILD} \
+    -DLLVM_ENABLE_ASSERTIONS=OFF \
+    -DLLVM_ENABLE_CXX1Y=ON \
+    -DLLVM_ENABLE_FFI=OFF \
+    -DLLVM_ENABLE_LIBEDIT=OFF \
+    -DLLVM_ENABLE_LIBCXX=OFF \
+    -DLLVM_ENABLE_PIC=ON \
+    -DLLVM_ENABLE_LIBPFM=OFF \
+    -DLLVM_ENABLE_EH=ON \
+    -DLLVM_ENABLE_RTTI=ON \
+    -DLLVM_ENABLE_SPHINX=OFF \
+    -DLLVM_ENABLE_TERMINFO=OFF \
+    -DLLVM_ENABLE_ZLIB=ON \
+    -DLLVM_INCLUDE_EXAMPLES=OFF \
+    -DLLVM_LINK_LLVM_DYLIB=ON \
+    -DLIBCLANG_BUILD_STATIC=ON \
+    -DCLANG_BUILD_EXAMPLES=OFF \
+    -DCLANG_INCLUDE_DOCS=OFF \
+    -DCLANG_INCLUDE_TESTS=OFF \
+    -DCLANG_PLUGIN_SUPPORT=ON \
+    -DCMAKE_VERBOSE_MAKEFILE=OFF \
+    -DCLANG_VENDOR=bpftrace \
+    -DLLVM_APPEND_VC_REV=OFF ../llvm \
+    && ninja -j$(nproc) && ninja install
+    
+RUN rm -rf /root/llvm-project-${LLVM_VERSION}.0.0.src
