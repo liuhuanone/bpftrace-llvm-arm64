@@ -1,5 +1,5 @@
 # bpftrace-llvm-arm64
-base docker image for arm64. while you want to build bpftrace(&lt;=0.19) for arm64 ,can use it.   
+base docker image for arm64. while you want to build bpftrace for arm64 ,can use it.   
 the official recommendation is to use Nix when bpftrace is greater than 19.
 
 The official Docker image is for x86 architecture. Referring to the official version, I've provided two ARM64 Docker images. 
