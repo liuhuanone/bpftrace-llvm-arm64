@@ -26,4 +26,4 @@ RUN cd bcc && mkdir build && \
 RUN git clone https://github.com/bpftrace/bpftrace.git -b release/0.21.x
 RUN cd bpftrace && mkdir -p "$BUILD_PATH" && \
     cmake -B "$BUILD_PATH" -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE="$2" -DBUILD_ASAN:BOOL=OFF -DWARNINGS_AS_ERRORS:BOOL=OFF && \
-    -DALLOW_UNSAFE_PROBE:BOOL=ON -DVENDOR_GTEST=0 -DSTATIC_LINKING=ON && make -C "$BUILD_PATH" -j$(nproc) install
+    -DVENDOR_GTEST=0 -DSTATIC_LINKING=ON && make -C "$BUILD_PATH" -j$(nproc) install
