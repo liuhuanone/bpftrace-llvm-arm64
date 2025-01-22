@@ -15,4 +15,4 @@ RUN git clone https://github.com/the-tcpdump-group/libpcap.git -b libpcap-1.6 &&
    
 COPY make.sh /make.sh
 RUN chmod 755 /make.sh
-#ENTRYPOINT ["bash", "/make.sh"] 
+ENTRYPOINT ["bash", "/make.sh"] 
