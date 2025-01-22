@@ -1,3 +1,4 @@
+# generate image => bpftrace-llvm14-arm64:focal-glibc231
 FROM ubuntu:20.04
 
 ENV LLVM_VERSION=14
