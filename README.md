@@ -1,6 +1,6 @@
 # bpftrace-llvm-arm64
 while you want to build **static** bpftrace for arm64 ,use it.
-the official recommendation is to use Nix when greater than 0.19.x. but nix generate musl-libc, not glibc. 
+the official recommendation is to use Nix when greater than 0.19.x. but nix generate musl-libc, not glibc.  
 <span style="font-size:14px; color: gray;" >docker needs to be installed before compiling.</span>
 
 # 0.19.x
